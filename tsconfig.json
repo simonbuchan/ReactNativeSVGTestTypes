@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "module": "esnext",
+    "target": "es2017",
     "strict": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "preserve"
+    "jsx": "react-native",
+    "moduleResolution": "node"
   }
 }
