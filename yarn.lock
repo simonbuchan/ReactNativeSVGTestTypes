@@ -3591,12 +3591,9 @@ react-devtools-core@3.0.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-"react-native-svg@file:../react-native-svg":
-  version "6.0.1-rc.2"
-  dependencies:
-    color "^2.0.1"
-    lodash "^4.16.6"
-    pegjs "^0.10.0"
+"react-native-svg@link:../react-native-svg":
+  version "0.0.0"
+  uid ""
 
 react-native@0.52.0:
   version "0.52.0"

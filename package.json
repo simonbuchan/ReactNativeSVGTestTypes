@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "16.2.0",
     "react-native": "0.52.0",
-    "react-native-svg": "file:../react-native-svg"
+    "react-native-svg": "link:../react-native-svg"
   },
   "devDependencies": {
     "@types/react": "^16.0.34",
