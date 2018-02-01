@@ -1,28 +1,33 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import * as Svg from "react-native-svg";
-const App = () => (<ScrollView style={StyleSheet.absoluteFill} horizontal>
-    <DemoPath Path={Svg.Rect} pathProps={{ x: 2, y: 2, width: 96, height: 96 }}/>
-    <DemoPath Path={Svg.Circle} pathProps={{ cx: 50, cy: 50, r: 48 }}/>
-    <DemoPath Path={Svg.Path} pathProps={{ d: "M25 10 L98 65 L70 25 L16 77 L11 30 L0 4 L90 50 L50 10 L11 22 L77 95 L20 25" }}/>
-    <DemoPath Path={Svg.Text} pathProps={{ x: 10, y: 20, dy: 20, fontSize: 40, children: <React.Fragment>
-        Hello
-        <Svg.TSpan x={10} y={40}>World</Svg.TSpan>
-      </React.Fragment>
-}}/>
+const font = {
+    fontFamily: 'Consolas',
+    fontSize: '10',
+    fontWeight: '700',
+};
+const App = () => (<FlatList style={StyleSheet.absoluteFill} horizontal renderItem={e => e.item} keyExtractor={(_, index) => index.toString()} data={[
+    <DemoPath Path={Svg.Rect} pathProps={{ x: 2, y: 2, width: 96, height: 96 }}/>,
+    <DemoPath Path={Svg.Circle} pathProps={{ cx: 50, cy: 50, r: 48 }}/>,
+    <DemoPath Path={Svg.Path} pathProps={{ d: "M25 10 L98 65 L70 25 L16 77 L11 30 L0 4 L90 50 L50 10 L11 22 L77 95 L20 25" }}/>,
+    <DemoPath Path={Svg.Text} pathProps={{
+        font,
+        children: (<React.Fragment>
+              <Svg.TSpan x={10} y={30}>Hello</Svg.TSpan>
+              <Svg.TSpan x={10} y={60}>World</Svg.TSpan>
+            </React.Fragment>)
+    }}/>,
     <DemoPath Path={Svg.Use} pathProps={{ href: '#x', width: '100', height: '100' }} defs={<React.Fragment>
-        <Svg.G id='x'>
-          <Svg.Rect x={20} y={20} width={60} height={60} fill="yellow" stroke="green" strokeWidth={2}/>
-          <Svg.Circle cx={50} cy={50} r={38} fill="red" stroke="blue" strokeWidth={2}/>
-        </Svg.G>
-      </React.Fragment>}/>
-  </ScrollView>);
+            <Svg.G id='x'>
+              <Svg.Rect x={20} y={20} width={60} height={60} fill="yellow" stroke="green" strokeWidth={2}/>
+              <Svg.Circle cx={50} cy={50} r={38} fill="red" stroke="blue" strokeWidth={2}/>
+            </Svg.G>
+          </React.Fragment>}/>,
+]}/>);
 export { App as default };
 const DemoPath = (props) => (<View style={styles.demoPath}>
     <Text style={styles.demoPathName}>{props.Path.displayName}</Text>
-    <ScrollView style={styles.demoPathScroll} contentContainerStyle={styles.demoPathContainerStyle}>
-      {fillPropsList.map((fillProps, fi) => (strokePropsList.map((strokeProps, si) => (<DemoPathItem key={si} {...props} fillProps={fillProps} strokeProps={strokeProps}/>))))}
-    </ScrollView>
+    <FlatList keyExtractor={(_, index) => index.toString()} numColumns={3} data={fillStrokePropsList} renderItem={e => <DemoPathItem {...props} {...e.item}/>}/>
   </View>);
 const DemoPathItem = ({ Path, pathProps, defs, strokeProps, fillProps }) => (<Svg.Svg width={100} height={100} style={styles.demoPathItem}>
     <Svg.Defs>
@@ -52,6 +57,14 @@ const fillPropsList = [
     { fill: 'url(#g1)' },
     { fill: 'url(#g2)' },
 ];
+const fillStrokePropsList = flatMap(fillPropsList, fillProps => (strokePropsList.map((strokeProps) => ({ fillProps, strokeProps }))));
+function flatMap(left, select) {
+    const result = [];
+    for (const item of left) {
+        result.push(...select(item));
+    }
+    return result;
+}
 const styles = StyleSheet.create({
     demoPath: {
         width: 360,
@@ -65,7 +78,6 @@ const styles = StyleSheet.create({
     },
     demoPathContainerStyle: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
     },
     demoPathItem: {
         margin: 10,
